@@ -10,50 +10,56 @@ Classes to implement:
     - FamilyAccountUser
     - FamilyMember
 """
-class User():
-    def __init__(self, username, email, age=None):
-        self.username = username
-        self.email = email
+class User:
+    def __init__(self, user_id, name, age=None):
+        self.user_id = user_id
+        self.name = name
         self.age = age
+        self.sessions = []
 
-    def __str__(self):
-        return f"User: {self.username} ({self.email})"
-    
+    def add_session(self, session):
+        self.sessions.append(session)
+
+    def total_listening_seconds(self) -> int:
+        return sum(getattr(s, "duration_listened_seconds", 0) for s in self.sessions)
+
+    def total_listening_minutes(self) -> float:
+        return self.total_listening_seconds() / 60
+
+    def unique_tracks_listened(self):
+        return {s.track.track_id for s in self.sessions}
+
+
 class FreeUser(User):
-    def __init__(self, username, email, age=None):
-        super().__init__(username, email, age)
+    def __init__(self, user_id, name, age=None):
+        super().__init__(user_id, name, age)
         self.subscription_type = "Free"
-    
-    def __str__(self):
-        return f"Free User: {self.username} ({self.email})"
-  
+
 
 class PremiumUser(User):
-    def __init__(self, username, email, age=None, subscription_start=None):
-        super().__init__(username, email, age)
+    def __init__(self, user_id, name, age=None, subscription_start=None):
+        super().__init__(user_id, name, age)
         self.subscription_type = "Premium"
         self.subscription_start = subscription_start
 
-    def __str__(self):
-        return f"Premium User: {self.username} ({self.email})"
 
 class FamilyAccountUser(User):
-    def __init__(self, username, email, age=None):
-        super().__init__(username, email, age)
+    def __init__(self, user_id, name, age=None):
+        super().__init__(user_id, name, age)
         self.subscription_type = "Family"
-        self.members = []
+        self.sub_users = []
 
-    def NewMembers(self, username, email, age=None):
-        self.members.append(FamilyMember(username, email, age))
+    def add_sub_user(self, member):
+        # member is expected to be a FamilyMember instance
+        if member not in self.sub_users:
+            self.sub_users.append(member)
 
-    def __str__(self):
-        return f"Family Account User: {self.username} ({self.email})"
-    
+    def all_members(self):
+        return [self] + list(self.sub_users)
+
+
 class FamilyMember(User):
-    def __init__(self, username, email, age=None, parent=None):
-        super().__init__(username, email, age)
-        self.subscription_type = "Family User"
+    def __init__(self, user_id, name, age=None, parent=None):
+        super().__init__(user_id, name, age)
         self.parent = parent
 
-    def __str__(self):
-        return f" Family Member: {self.username} ({self.email})"

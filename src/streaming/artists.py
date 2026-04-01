@@ -10,20 +10,32 @@ Classes to implement:
 from streaming.albums import Album
 
 
-class Artist:  #musician or content creator, separate?
-    def __init__(self, name, genre):
+class Artist:
+    """Represents an artist/content creator.
+
+    Expected constructor signature used by tests: Artist(artist_id, name, genre="pop")
+    """
+    def __init__(self, artist_id, name, genre):
+        self.artist_id = artist_id
         self.name = name
         self.genre = genre
         self.albums = []
+        self.tracks = []
 
     def add_album(self, album):
         self.albums.append(album)
 
-    def single_release(self, title, duration, genre=None, release_date=None):
-        single = Album(title, self.name, genre=genre, release_date=release_date)
+    def add_track(self, track):
+        self.tracks.append(track)
+
+    def track_count(self) -> int:
+        return len(self.tracks)
+
+    def single_release(self, title, duration, genre=None, release_year=None):
+        single = Album(title, self.name, genre=genre, artist=self.name, release_year=release_year)
         self.add_album(single)
         return single
 
-    def __str__(self): 
+    def __str__(self):
         album_list = "\n".join([f"{i+1}. {album.title}" for i, album in enumerate(self.albums)])
         return f"Artist: {self.name} ({self.genre})\nAlbums:\n{album_list}"

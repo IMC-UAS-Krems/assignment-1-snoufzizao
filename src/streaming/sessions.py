@@ -6,17 +6,21 @@ Implement the ListeningSession class for recording listening events.
 Classes to implement:
   - ListeningSession
 """
-class ListeningSession():
-    
-    def __init__(self, user, start_time, end_time):
-        self.user = user
-        self.tracks = []
-        self.start_time = start_time
-        self.end_time = end_time
+class ListeningSession:
+    """Represents a single listening event (one track listened by a user).
 
-    def add_track(self, track):
-        self.tracks.append(track)
+    Expected signature in tests:
+      ListeningSession(session_id, user, track, timestamp, duration_seconds)
+    """
+    def __init__(self, session_id, user, track, timestamp, duration_seconds):
+        self.session_id = session_id
+        self.user = user
+        self.track = track
+        self.timestamp = timestamp
+        self.duration_listened_seconds = duration_seconds
+
+    def duration_listened_minutes(self):
+        return self.duration_listened_seconds / 60
 
     def __str__(self):
-        track_list = "\n".join([f"{i+1}. {track}" for i, track in enumerate(self.tracks)])
-        return f"Listening Session for {self.user} from {self.start_time} to {self.end_time}\nTracks:\n{track_list}"
+        return f"ListeningSession({self.session_id}) user={self.user} track={self.track} ts={self.timestamp} dur={self.duration_listened_seconds}"
