@@ -52,6 +52,6 @@ class AlbumTrack(Album):
 
     def __str__(self):  
 
-        minutes = self.duration_seconds // 60
-        seconds = self.duration_seconds % 60
+        minutes = self.duration_seconds // 60 #type: ignore
+        seconds = self.duration_seconds % 60 # type: ignore
         return f"{self.title} ({minutes}:{seconds:02d})"

@@ -4,34 +4,54 @@ class StreamingPlatform:
     def __init__(self, name):
        
         self.name = name
-        self.artists = []
-        self.albums = []
-        self.tracks = []
-        self.users = []
-        self.playlists = []
-
-    def add_artist(self, artist):
-        self.artists.append(artist)
-
-    def add_album(self, album):
-        self.albums.append(album)
+        self._catalogue={}
+        self._artists = []
+        self._albums = []
+        self._tracks = []
+        self._users = []
+        self._playlists = []
+        self._sessions=[]
 
     def add_track(self, track):
-        self.tracks.append(track)
+        self._tracks.append(track)
 
     def add_user(self, user):
-        self.users.append(user)
+        self._users.append(user)
+    
+    def add_artist(self, artist):
+        self._artists.append(artist)
+
+    def add_album(self, album):
+        self._albums.append(album)
 
     def add_playlist(self, playlist):
-        self.playlists.append(playlist)
+        self._playlists.append(playlist)
+
+    def record_session(self, session):
+        self._sessions.append(session)
+
+    def get_track(self, track_id):
+        return track_id
+    
+    def get_user(self, user_id):
+        return user_id
+    
+    def get_artist(self, artist_id):
+        return artist_id
+    
+    def get_album(self, album_id):
+        return album_id
 
     def all_users(self):
-        return list(self.users)
+        return list(self._users)
+    
+    def all_tracks(self):
+        return list(self._tracks)
 
     # Q1
     def total_listening_time_minutes(self, start, end) -> float:
         total_seconds = 0
-        for u in self.users:
+        for u in self._users:
             for s in getattr(u, "sessions", []):
                 ts = getattr(s, "timestamp", None)
                 if ts is None:
@@ -43,10 +63,10 @@ class StreamingPlatform:
     # Q2
     def avg_unique_tracks_per_premium_user(self, days: int = 30) -> float:
         from datetime import datetime, timedelta
-
+        #without import better if possible- return to this
         now = datetime.now()
         cutoff = now - timedelta(days=days)
-        premium_users = [u for u in self.users if u.__class__.__name__ == "PremiumUser"]
+        premium_users = [u for u in self._users if u.__class__.__name__ == "PremiumUser"]
         if not premium_users:
             return 0.0
         counts = []
@@ -60,7 +80,7 @@ class StreamingPlatform:
         from collections import defaultdict
 
         listeners = defaultdict(set)
-        for u in self.users:
+        for u in self._users:
             for s in getattr(u, "sessions", []):
                 if getattr(s, "track", None) is None:
                     continue
@@ -69,7 +89,7 @@ class StreamingPlatform:
             return None
         best_id = max(listeners.items(), key=lambda kv: len(kv[1]))[0]
         # find track object
-        for t in self.tracks:
+        for t in self._tracks:
             if getattr(t, "track_id", None) == best_id:
                 return t
         return None
@@ -80,7 +100,7 @@ class StreamingPlatform:
 
         sums = defaultdict(int)
         counts = defaultdict(int)
-        for u in self.users:
+        for u in self._users:
             tname = u.__class__.__name__
             for s in getattr(u, "sessions", []):
                 sums[tname] += getattr(s, "duration_listened_seconds", 0)
@@ -89,14 +109,14 @@ class StreamingPlatform:
         for tname in sums.keys() | counts.keys():
             avg = float(sums.get(tname, 0) / counts.get(tname, 1)) if counts.get(tname, 0) > 0 else 0.0
             results.append((tname, avg))
-        # sort descending by avg
+        # sort descending by avg ---- not rlly necessary, rethink 
         results.sort(key=lambda x: x[1], reverse=True)
         return results
 
     # Q5
     def total_listening_time_underage_sub_users_minutes(self, age_threshold: int = 18) -> float:
         total_seconds = 0
-        for u in self.users:
+        for u in self._users:
             # family members are instances of FamilyMember
             if u.__class__.__name__ == "FamilyMember" and (u.age is not None and u.age < age_threshold):
                 for s in getattr(u, "sessions", []):
@@ -108,7 +128,7 @@ class StreamingPlatform:
         from collections import defaultdict
 
         artist_seconds = defaultdict(int)
-        for u in self.users:
+        for u in self._users:
             for s in getattr(u, "sessions", []):
                 track = getattr(s, "track", None)
                 if track is None:
@@ -124,7 +144,7 @@ class StreamingPlatform:
 
     # Q7
     def user_top_genre(self, user_id: str):
-        user = next((u for u in self.users if u.user_id == user_id), None)
+        user = next((u for u in self._users if u.user_id == user_id), None)
         if user is None:
             return None
         genre_seconds = {}
@@ -145,7 +165,7 @@ class StreamingPlatform:
     # Q8
     def collaborative_playlists_with_many_artists(self, threshold: int = 1):
         result = []
-        for p in self.playlists:
+        for p in self._playlists:
             from streaming.playlists import CollaborativePlaylist
             if not isinstance(p, CollaborativePlaylist):
                 continue
@@ -164,7 +184,7 @@ class StreamingPlatform:
     def avg_tracks_per_playlist_type(self):
         from streaming.playlists import Playlist, CollaborativePlaylist
         counts = {"Playlist": [], "CollaborativePlaylist": []}
-        for p in self.playlists:
+        for p in self._playlists:
             if isinstance(p, CollaborativePlaylist):
                 counts["CollaborativePlaylist"].append(len(p.tracks))
             elif isinstance(p, Playlist):
@@ -177,10 +197,10 @@ class StreamingPlatform:
     # Q10
     def users_who_completed_albums(self):
         result = []
-        for u in self.users:
+        for u in self._users:
             completed = []
             listened = {s.track.track_id for s in getattr(u, "sessions", []) if getattr(s, "track", None) is not None}
-            for album in self.albums:
+            for album in self._albums:
                 if not album.tracks:
                     continue
                 album_track_ids = {t.track_id for t in album.tracks}
@@ -191,6 +211,6 @@ class StreamingPlatform:
         return result
 
     def __str__(self):
-        artist_list = "\n".join([f"{i+1}. {artist.name}" for i, artist in enumerate(self.artists)])
-        album_list = "\n".join([f"{i+1}. {album.title} by {album.artist}" for i, album in enumerate(self.albums)])
+        artist_list = "\n".join([f"{i+1}. {artist.name}" for i, artist in enumerate(self.artists)]) #type: ignore
+        album_list = "\n".join([f"{i+1}. {album.title} by {album.artist}" for i, album in enumerate(self.albums)]) #type: ignore
         return f"Streaming Platform: {self.name}\nArtists:\n{artist_list}\nAlbums:\n{album_list}"

@@ -20,7 +20,7 @@ class ListeningSession:
         self.duration_listened_seconds = duration_seconds
 
     def duration_listened_minutes(self):
-        return self.duration_listened_seconds / 60
+        return self.duration_listened_seconds / 60 #type: float
 
     def __str__(self):
         return f"ListeningSession({self.session_id}) user={self.user} track={self.track} ts={self.timestamp} dur={self.duration_listened_seconds}"
