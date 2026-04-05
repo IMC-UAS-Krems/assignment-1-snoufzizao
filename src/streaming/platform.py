@@ -118,7 +118,7 @@ class StreamingPlatform:
                 if isinstance(track, Song):
                     artist = getattr(track, "artist", None)
                     if hasattr(artist, "artist_id"):
-                        artist_seconds[artist] += getattr(s, "duration_listened_seconds", 0) / 60
+                        artist_seconds[artist] += getattr(s, "duration_listened_seconds", 0) / 60 #type: ignore
         items = sorted(artist_seconds.items(), key=lambda kv: kv[1], reverse=True)
         return items[:n]
 
