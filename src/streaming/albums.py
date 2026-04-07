@@ -24,13 +24,10 @@ class Album:
             pass
 
         self.tracks.append(track)
-        # Keep tracks ordered by track_number when available.
+        # keep tracks ordered by track_number 
         self.tracks.sort(key=lambda t: getattr(t, "track_number", 0))
 
-    def __str__(self): # Return a string of the album, including its title, artist, and track list.
-        
-        track_list = "\n".join([f"{i+1}. {track}" for i, track in enumerate(self.tracks)])
-        return f"Album: {self.title} by {self.artist}\nTracks:\n{track_list}"
+    
 
     def track_ids(self):
         return {t.track_id for t in self.tracks}
@@ -50,8 +47,8 @@ class AlbumTrack(Album):
         self.track_number = track_number
         self.album = None
 
-    def __str__(self):  
+    # def __str__(self):  ------ not rlly needed
 
-        minutes = self.duration_seconds // 60 #type: ignore
-        seconds = self.duration_seconds % 60 # type: ignore
-        return f"{self.title} ({minutes}:{seconds:02d})"
+    #     minutes = self.duration_seconds // 60 #type: ignore
+    #     seconds = self.duration_seconds % 60 # type: ignore
+    #     return f"{self.title} ({minutes}:{seconds:02d})"
