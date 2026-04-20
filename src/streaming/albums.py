@@ -1,11 +1,4 @@
-"""
-albums.py
----------
-Implement the Album class for collections of AlbumTrack objects.
 
-Classes to implement:
-  - Album
-"""
 class Album:
 
     def __init__(self, album_id, title, artist, genre=None, release_year=None):
@@ -18,13 +11,14 @@ class Album:
         self.tracks = []
 
     def add_track(self, track): 
-        try: #to see if track belongs to album
-            track.album = self
+        #
+        try:
+            setattr(track, "album", self)
         except Exception:
             pass
 
         self.tracks.append(track)
-        # keep tracks ordered by track_number 
+        #keep tracks ordered by track_number 
         self.tracks.sort(key=lambda t: getattr(t, "track_number", 0))
 
     def track_ids(self):
@@ -33,14 +27,4 @@ class Album:
     def duration_seconds(self):
         return sum(getattr(t, "duration_seconds", 0) for t in self.tracks)
 
-class AlbumTrack(Album):
 
-    def __init__(self, track_id, title, duration_seconds, genre, artist, track_number):
-
-        self.track_id = track_id
-        self.title = title
-        self.duration_seconds = duration_seconds
-        self.genre = genre
-        self.artist = artist
-        self.track_number = track_number
-        self.album = None

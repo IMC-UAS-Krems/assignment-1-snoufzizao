@@ -1,12 +1,5 @@
-"""
-playlists.py
-------------
-Implement playlist classes for organizing tracks.
 
-Classes to implement:
-  - Playlist
-    - CollaborativePlaylist
-"""
+
 class Playlist:
     def __init__(self, playlist_id, title, owner=None):
         self.playlist_id = playlist_id
@@ -33,15 +26,17 @@ class Playlist:
 class CollaborativePlaylist(Playlist):
     def __init__(self, playlist_id, title, owner=None):
         super().__init__(playlist_id, title, owner=owner)
-        
-        self.contributors = [owner] #owner is first contributor always
+        #owner is first contributor if provided
+        self.contributors = []
+        if owner is not None:
+            self.contributors.append(owner)
 
     def add_contributor(self, contributor):
         if contributor not in self.contributors:
             self.contributors.append(contributor)
 
     def remove_contributor(self, contributor):
-        # never remove the owner
+        #never remove the owner
         if contributor == self.owner:
             return
         if contributor in self.contributors:

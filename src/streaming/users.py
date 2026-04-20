@@ -1,15 +1,4 @@
-"""
-users.py
---------
-Implement the class hierarchy for platform users.
 
-Classes to implement:
-  - User (base class)
-    - FreeUser
-    - PremiumUser
-    - FamilyAccountUser
-    - FamilyMember
-"""
 class User:
     def __init__(self, user_id, name, age=None):
         self.user_id = user_id
@@ -27,14 +16,16 @@ class User:
         return self.total_listening_seconds() / 60
 
     def unique_tracks_listened(self):
-        return {s.track.track_id for s in self.sessions}
+        return {s.track.track_id for s in self.sessions if getattr(s, "track", None) is not None}
 
 
 class FreeUser(User):
+    #set is  class level constnat 
+    MAX_SKIPS_PER_HOUR = 6
+
     def __init__(self, user_id, name, age=None):
         super().__init__(user_id, name, age)
         self.subscription_type = "Free"
-        MAX_SKIPS_PER_HOUR= int(6)
 
 
 
@@ -53,9 +44,14 @@ class FamilyAccountUser(User):
         self.sub_users = []
 
     def add_sub_user(self, member):
-        # member is expected to be a FamilyMember instance
+        #member is expected to be a FamilyMember instance
         if member not in self.sub_users:
             self.sub_users.append(member)
+            #link back to parent, if there
+            try:
+                setattr(member, "parent", self)
+            except Exception:
+                pass
 
     def all_members(self):
         return [self] + list(self.sub_users)

@@ -1,20 +1,4 @@
-"""
-tracks.py
----------
-Implement the class hierarchy for all playable content on the platform.
 
-The test-suite expects specific constructors and attributes. This module
-implements the following public classes and signatures:
-
-Track(track_id, title, duration_seconds, genre)
-Song(track_id, title, duration_seconds, genre, artist)
-SingleRelease(track_id, title, duration_seconds, genre, artist, release_date=None)
-AlbumTrack(track_id, title, duration_seconds, genre, artist, track_number)
-Podcast(track_id, title, duration_seconds, genre, host, description='')
-InterviewEpisode(..., guest=None)
-NarrativeEpisode(..., season=None, episode_number=None)
-AudiobookTrack(track_id, title, duration_seconds, genre, author, narrator=None)
-"""
 
 class Track:
     def __init__(self, track_id, title, duration_seconds, genre):
