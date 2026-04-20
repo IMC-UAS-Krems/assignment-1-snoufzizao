@@ -1,21 +1,4 @@
-"""
-test_public.py
---------------
-Public test suite template.
 
-This file provides a minimal framework and examples to guide you in writing
-comprehensive tests for your StreamingPlatform implementation. Each test class
-corresponds to one of the 10 query methods (Q1-Q10).
-
-You should:
-1. Study the examples provided
-2. Complete the stub tests (marked with TODO or pass statements)
-3. Add additional test cases for edge cases and boundary conditions
-4. Verify your implementation passes all tests
-
-Run with:
-    pytest tests/test_public.py -v
-"""
 
 import pytest
 from datetime import datetime, timedelta
@@ -100,7 +83,7 @@ class TestAvgUniqueTracksPremium:
     #       average for premium users. You'll need to count unique tracks
     #       per premium user and calculate the average.
     def test_correct_value(self, platform: StreamingPlatform) -> None:
-        #  expected value from fixture users sessions (last num of days)
+        # expected value from users sessions (last n of days)
         from datetime import datetime, timedelta
         days = 30
         now = datetime.now()
@@ -142,7 +125,7 @@ class TestTrackMostDistinctListeners:
     # TODO: Add a test that verifies the correct track is returned.
     #       Count listeners per track from the fixture data.
     def test_correct_track(self, platform: StreamingPlatform) -> None:
-        #  counting distinct listeners per track_id
+        #counting distinct listeners per track_id
         from collections import defaultdict
         listeners = defaultdict(set)
         for u in platform.all_users():
@@ -190,7 +173,7 @@ class TestAvgSessionDurationByType:
        
         result = platform.avg_session_duration_by_user_type()
         present_types = {item[0] for item in result}
-        # returned types correspond to user types that have session records,,, if no sessions exist itll be empty
+        #returned types correspond to user types that have session records,,, if no sessions exist itll be empty
         expected_types = {u.__class__.__name__ for u in platform.all_users() if getattr(u, "sessions", [])}
         assert present_types == expected_types
 
@@ -418,7 +401,7 @@ class TestAvgTracksPerPlaylistType:
 
     # TODO: Add tests that verify the correct averages for each playlist type.
     def test_standard_playlist_average(self, platform: StreamingPlatform) -> None:
-        # averages from registered playlists
+        #averages from registered playlists
         from streaming.playlists import Playlist, CollaborativePlaylist
         counts = {"Playlist": [], "CollaborativePlaylist": []}
         for p in platform.playlists:
@@ -436,7 +419,7 @@ class TestAvgTracksPerPlaylistType:
     def test_collaborative_playlist_average(
         self, platform: StreamingPlatform
     ) -> None:
-        # same value for collaborative p.
+        #same value for collaborative p.
         from streaming.playlists import Playlist, CollaborativePlaylist
         counts = {"Playlist": [], "CollaborativePlaylist": []}
         for p in platform.playlists:
