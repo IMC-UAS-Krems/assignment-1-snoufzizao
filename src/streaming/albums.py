@@ -18,7 +18,7 @@ class Album:
         self.tracks = []
 
     def add_track(self, track): 
-        try: #to see if track belongs to album.
+        try: #to see if track belongs to album
             track.album = self
         except Exception:
             pass
@@ -26,8 +26,6 @@ class Album:
         self.tracks.append(track)
         # keep tracks ordered by track_number 
         self.tracks.sort(key=lambda t: getattr(t, "track_number", 0))
-
-    
 
     def track_ids(self):
         return {t.track_id for t in self.tracks}
@@ -46,9 +44,3 @@ class AlbumTrack(Album):
         self.artist = artist
         self.track_number = track_number
         self.album = None
-
-    # def __str__(self):  ------ not rlly needed
-
-    #     minutes = self.duration_seconds // 60 #type: ignore
-    #     seconds = self.duration_seconds % 60 # type: ignore
-    #     return f"{self.title} ({minutes}:{seconds:02d})"

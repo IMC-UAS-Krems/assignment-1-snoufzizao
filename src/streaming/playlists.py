@@ -47,7 +47,4 @@ class CollaborativePlaylist(Playlist):
         if contributor in self.contributors:
             self.contributors.remove(contributor)
 
-    def __str__(self):
-        contributor_list = ", ".join([str(c) for c in self.contributors])
-        track_list = "\n".join([f"{i+1}. {track}" for i, track in enumerate(self.tracks)])
-        return f"Collaborative Playlist: {self.title} by {self.owner}\nContributors: {contributor_list}\nTracks:\n{track_list}"
+    

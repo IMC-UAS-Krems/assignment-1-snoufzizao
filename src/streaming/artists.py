@@ -36,6 +36,3 @@ class Artist:
         self.add_album(single)
         return single
 
-    def __str__(self):
-        album_list = "\n".join([f"{i+1}. {album.title}" for i, album in enumerate(self.albums)])
-        return f"Artist: {self.name} ({self.genre})\nAlbums:\n{album_list}"
